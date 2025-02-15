@@ -1,0 +1,74 @@
+from tkinter import *
+import tkinter
+from tkinter import filedialog
+import numpy as np
+from tkinter import simpledialog
+from tkinter import ttk
+from tkinter.filedialog import askopenfilename
+import os
+from keras.models import load_model
+from keras.preprocessing.image import img_to_array
+from PIL import Image
+import keras
+from keras import backend as k 
+from keras.models import Sequential
+from keras.layers import Activation
+from keras.layers.core import Dense, Flatten
+from keras.optimizers import Adam
+from keras.metrics import categorical_crossentropy
+from keras.preprocessing.image import ImageDataGenerator
+from keras.layers.normalization import BatchNormalization
+from keras.layers.convolutional import *
+from matplotlib import pyplot as plt
+from sklearn.metrics import confusion_matrix
+import itertools
+import matplotlib.pyplot as plt
+import cv2
+import pickle
+
+main = tkinter.Tk()
+main.title("Diabetic Retinopathy Prediction")  # Designing the main screen
+main.geometry("1000x650")
+
+# Define custom colors
+bg_color = '#FFDAB9'  # PeachPuff
+button_color = '#FF6347'  # Tomato
+text_color = '#2E8B57'  # SeaGreen
+
+global filename, X, Y, cnn_model
+global train_batches, valid_batches, test_batches
+
+# Function to create textured button
+def create_button(parent, text, command, x, y):
+    button = Button(parent, text=text, command=command)
+    button.place(x=x, y=y)
+    button.config(bg=button_color, fg='white', font=('times', 13, 'bold'), relief=RAISED)
+    return button
+
+# Function to create textured text box
+def create_textbox(parent, height, width, x, y):
+    textbox = Text(parent, height=height, width=width)
+    textbox.place(x=x, y=y)
+    textbox.config(bg=bg_color, fg=text_color, font=('times', 12, 'bold'))
+    return textbox
+
+# Create labels
+font = ('times', 16, 'bold')
+title = Label(main, text='Diabetic Retinopathy Prediction', justify=LEFT)
+title.config(bg='lightcoral', fg='DarkOrchid1')  
+title.config(font=font)           
+title.config(height=3, width=120)       
+title.pack()
+
+# Create buttons
+uploadButton = create_button(main, "Upload Retinopathy Dataset", loadDataset, 10, 100)
+processButton = create_button(main, "Preprocess Images", processImage, 300, 100)
+svmButton = create_button(main, "Run CNN Algorithm", runCNN, 590, 100)
+predictButton = create_button(main, "Predict Retinopathy", predict, 10, 200)
+graphButton = create_button(main, "CNN Accuracy & Loss Graph", graph, 300, 200)
+
+# Create text box
+text = create_textbox(main, 20, 120, 10, 300)
+
+main.config(bg=bg_color)
+main.mainloop()
